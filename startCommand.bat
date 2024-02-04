@@ -1,12 +1,10 @@
 cd .\java-spring-service\
 
-docker stop testapp_con
-
-docker rm testapp_con
-
-docker rmi test_img
+mvn clean install
 
 docker build -t test_img .
+
+cd ..
 
 docker-compose up
 
