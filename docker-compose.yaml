@@ -22,6 +22,17 @@ services:
       POSTGRES_DB: manga_translation_db
     ports:
       - "6544:5432"
+  flyway:
+    image: flyway/flyway
+    volumes:
+      - ./data/postgres/src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://postgres:5432/manga_translation_db
+      - FLYWAY_USER=admin
+      - FLYWAY_PASSWORD=admin1234
+    command: [ "migrate" ]
   rabbitmq:
     image: rabbitmq:management
     environment:
