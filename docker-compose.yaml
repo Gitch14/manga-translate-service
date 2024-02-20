@@ -1,19 +1,28 @@
 version: '3'
 services:
   java-service:
-    image: test_img
+    build:
+      context: ./java-spring-service
+      dockerfile: Dockerfile
+   # image: test_img
     ports:
       - "8081:8081"
     depends_on:
       - postgres
-  #python-service:
-   # build:
-   #   python-service
-    #  - image: image_name
-   # ports:
-    #  - "5000:5000"
-  #  depends_on:
-     # - postgres
+  python-service:
+    build:
+      context: ./python-translate-api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: manga_translation_db
+      DB_USER: admin
+      DB_PASSWORD: admin1234
   postgres:
     image: postgres:latest
     environment:
