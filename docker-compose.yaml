@@ -8,8 +8,11 @@ services:
       - "8081:8081"
     depends_on:
       - postgres
-    networks:
-      - my-network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/manga_translation_db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin1234
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
   python-service:
     build:
       context: ./python-translate-api
@@ -17,14 +20,13 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      postgres:
-          condition: service_completed_successfully
+      - postgres
     environment:
-      DB_HOST: postgres
-      DB_PORT: 6544
-      DB_NAME: manga_translation_db
-      DB_USER: admin
-      DB_PASSWORD: admin1234
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: admin1234
+      DATABASE_NAME: manga_translation_db
 
   postgres:
     image: postgres:latest
@@ -34,11 +36,6 @@ services:
       POSTGRES_DB: manga_translation_db
     ports:
       - "6544:5432"
-    networks:
-      - my-network
-    hostname: postgres
-
-
   flyway:
     image: flyway/flyway
     volumes:
@@ -50,8 +47,6 @@ services:
       - FLYWAY_USER=admin
       - FLYWAY_PASSWORD=admin1234
     command: [ "migrate" ]
-    networks:
-      - my-network
 
 
   rabbitmq:
@@ -63,15 +58,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - my-network
   redis:
     image: "redis:latest"
     ports:
       - "6379:6379"
-    networks:
-      - my-network
-
-networks:
-  my-network:
-    driver: bridge
