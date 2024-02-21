@@ -13,6 +13,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
   python-service:
     build:
       context: ./python-translate-api
@@ -36,6 +37,7 @@ services:
       POSTGRES_DB: manga_translation_db
     ports:
       - "6544:5432"
+
   flyway:
     image: flyway/flyway
     volumes:
@@ -48,7 +50,6 @@ services:
       - FLYWAY_PASSWORD=admin1234
     command: [ "migrate" ]
 
-
   rabbitmq:
     image: rabbitmq:management
     environment:
@@ -58,6 +59,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
   redis:
     image: "redis:latest"
     ports:
