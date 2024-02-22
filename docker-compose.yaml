@@ -59,10 +59,6 @@ services:
     depends_on:
       postgres:
         condition: service_completed_successfully
-      redis:
-        condition: service_completed_successfully
-      rabbitmq:
-        condition: service_completed_successfully
     environment:
       - FLYWAY_URL=jdbc:postgresql://postgres:5432/manga_translation_db
       - FLYWAY_USER=admin
@@ -78,6 +74,8 @@ services:
     depends_on:
       postgres:
         condition: service_completed_successfully
+      flyway:
+        condition: service_completed_successfully
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -85,6 +83,9 @@ services:
   redis:
     image: "redis:latest"
     depends_on:
-    - postgres
+      postgres:
+        condition: service_completed_successfully
+      flyway:
+        condition: service_completed_successfully
     ports:
       - "6379:6379"
