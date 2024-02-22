@@ -12,7 +12,7 @@ services:
       redis:
         condition: service_started
       rabbitmq:
-        condition: service_started
+        condition: service_completed_successfully
       flyway:
         condition: service_completed_successfully
     environment:
@@ -33,7 +33,7 @@ services:
       redis:
         condition: service_started
       rabbitmq:
-        condition: service_started
+        condition: service_completed_successfully
       flyway:
         condition: service_completed_successfully
     environment:
