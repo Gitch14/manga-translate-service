@@ -12,7 +12,7 @@ services:
       redis:
         condition: service_started
       rabbitmq:
-        condition: service_completed_successfully
+        condition: service_started
       flyway:
         condition: service_completed_successfully
     environment:
@@ -20,6 +20,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: on-failure
 
   python-service:
     build:
@@ -28,22 +29,21 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      postgres:
-        condition: service_started
-      redis:
-        condition: service_started
-      rabbitmq:
-        condition: service_completed_successfully
-      flyway:
-        condition: service_completed_successfully
+      - postgres
+      - flyway
+      - rabbitmq
+      - redis
+      - java-service
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
       DATABASE_USER: admin
       DATABASE_PASSWORD: admin1234
       DATABASE_NAME: manga_translation_db
+    restart: always
 
   postgres:
+    restart: on-failure
     image: postgres:latest
     environment:
       POSTGRES_USER: admin
@@ -54,6 +54,7 @@ services:
 
   flyway:
     image: flyway/flyway
+    restart: no
     volumes:
       - ./data/postgres/src/main/resources/db/migration:/flyway/sql
     depends_on:
@@ -68,10 +69,10 @@ services:
 
   rabbitmq:
     image: rabbitmq:management
+    restart: on-failure
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: 111
-    restart: no
     depends_on:
       postgres:
         condition: service_started
@@ -81,6 +82,7 @@ services:
 
   redis:
     image: "redis:latest"
+    restart: on-failure
     depends_on:
       postgres:
         condition: service_started
