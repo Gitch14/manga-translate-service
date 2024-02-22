@@ -57,8 +57,8 @@ services:
     volumes:
       - ./data/postgres/src/main/resources/db/migration:/flyway/sql
     depends_on:
-      postgres:
-        condition: service_started
+      - postgres
+      - rabbitmq
     environment:
       - FLYWAY_URL=jdbc:postgresql://postgres:5432/manga_translation_db
       - FLYWAY_USER=admin
@@ -85,7 +85,5 @@ services:
     depends_on:
       postgres:
         condition: service_started
-      flyway:
-        condition: service_completed_successfully
     ports:
       - "6379:6379"
