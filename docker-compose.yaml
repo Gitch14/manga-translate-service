@@ -19,7 +19,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/manga_translation_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin1234
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+     # - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     restart: on-failure
 
   python-service:
