@@ -40,7 +40,7 @@ services:
       DATABASE_USER: admin
       DATABASE_PASSWORD: admin1234
       DATABASE_NAME: manga_translation_db
-    restart: always
+    restart: on-failure
 
   postgres:
     restart: on-failure
